@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
 from cryptography.fernet import InvalidToken
-import re
+import re 
 
 def derive_key(master_pass, salt):
   kdf = PBKDF2HMAC(
@@ -107,7 +107,7 @@ def add_password(vault_key):
     data.append(new_data)
 
     with open("data.json", "w") as to_upload:
-      json.dump(new_data, to_upload, indent = 4)
+      json.dump(data, to_upload, indent = 4)
 
 def view_password(vault_key):
   if os.path.exists("data.json"):
@@ -142,7 +142,45 @@ def search_password(vault_key):
     else:
       print("INVALID SERVICE!")
       return
+    
+def delete_password(vault_key):
+  if not os.path.exists("data.json"):
+    print("STORE SOME PASSWORDS FIRST")
+    return
 
+  to_delete = input("Enter Service you wish to delete: ")
+  if not to_delete:
+      print("SERVCE NAME CANT BE EMPTY")
+
+  else:
+    with open("data.json", "r") as file:
+      read_file = json.load(file)
+      for i, line in enumerate(read_file):
+        try:
+          if to_delete == line["SERVICE"]:
+            read_file.pop(i)
+            with open("data.json", "w") as new_data:
+              json.dump(read_file, new_data, indent = 4)
+              break
+        except:
+          print("THIS SERVICE DOESN't EXIST IN DATA!!")
+          break
+
+def exit_program():
+  while True:
+    if_exit = input("DO YOU WISH TO EXIT THE PROGRAM? [y/n]").lower().strip()
+    if if_exit in ("y", "n"):
+      return if_exit
+    else: 
+      print("PLEASE ENTER VALID VALUE!!!")
+
+def more():
+  while True:
+    _more = input("Do you wish to do more?[y/n]").lower().strip()
+    if _more in ("y", "n"):
+      return _more
+    else:
+      print("INVALID VALUE PLEASE CHOOSE BETWEEN [y/n]")
 
 def main() :
   vault_key = master_password()
@@ -153,11 +191,32 @@ def main() :
     user_decision = ask_user()
     if user_decision == 1 :
       add_password(vault_key)
-
+      again = more()
+      if again == "n":
+        print("THANKYOU, FOR USING OUR SERVICE!")
+        break 
     elif user_decision == 2 :
       view_password(vault_key)
-
+      again = more()
+      if again == "n":
+        print("THANKYOU, FOR USING OUR SERVICE!")
+        break 
     elif user_decision == 3 :
       search_password(vault_key)
+      again = more()
+      if again == "n":
+        print("THANKYOU, FOR USING OUR SERVICE!")
+        break  
+    elif user_decision  == 4:
+      delete_password(vault_key)
+      again = more()
+      if again == "n":
+        print("THANKYOU, FOR USING OUR SERVICE!")
+        break 
+    elif user_decision == 5:
+      _exit = exit_program()
+      if _exit == "y":
+        break
 
-main()
+if __name__ == "__main__":
+  main()   
