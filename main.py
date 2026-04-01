@@ -7,6 +7,7 @@ from cryptography.fernet import Fernet
 from cryptography.fernet import InvalidToken
 import re 
 
+
 def derive_key(master_pass, salt):
   kdf = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
