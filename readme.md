@@ -5,6 +5,7 @@ A **CLI-based password manager** written in Python that securely stores and retr
 This project focuses on **security-first design**, proper key derivation, and encrypted storage while keeping sensitive data out of version control.
 
 ---
+
 ## ✨ Features
 
 - 🔑 Master password–protected vault
